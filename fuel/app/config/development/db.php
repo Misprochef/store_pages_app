@@ -20,11 +20,11 @@
  */
 
 return array(
-	'default' => array(
-		'connection' => array(
-			'dsn'      => 'mysql:host=localhost;dbname=fuel_dev',
-			'username' => 'root',
-			'password' => 'root',
-		),
-	),
+    'default' => array(
+        'connection' => array(
+            'dsn'      => 'mysql:host=localhost;dbname=store_pages_app_db',
+            'username' => 'root',
+            'password' => 'root',
+        ),
+    ),
 );

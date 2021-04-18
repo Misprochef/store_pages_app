@@ -15,7 +15,7 @@ require COREPATH.'bootstrap.php';
 
 // Add framework overload classes here
 \Autoloader::add_classes(array(
-	// Example: 'View' => APPPATH.'classes/myview.php',
+    // Example: 'View' => APPPATH.'classes/myview.php',
 ));
 
 // Register the autoloader
@@ -29,7 +29,15 @@ require COREPATH.'bootstrap.php';
  * Fuel::STAGING
  * Fuel::PRODUCTION
  */
-Fuel::$env = Arr::get($_SERVER, 'FUEL_ENV', Arr::get($_ENV, 'FUEL_ENV', getenv('FUEL_ENV') ?: Fuel::DEVELOPMENT));
+Fuel::$env = Arr::get(
+    $_SERVER,
+    'FUEL_ENV',
+    Arr::get(
+        $_ENV,
+        'FUEL_ENV',
+        getenv('FUEL_ENV') ?: Fuel::DEVELOPMENT
+    )
+);
 
 // Initialize the framework with the config file.
 \Fuel::init('config.php');
