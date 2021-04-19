@@ -8,6 +8,7 @@
   <h1>フォルダー登録なし</h1>
   <?php
   foreach ($pages_not_in_folder as $page): ?>
+  <?php if ($page): ?>
   <p><?php echo $page['id']; ?></p>
   <a href=<?php echo $page['url']; ?> target="_blank" rel="noreferrer"><?php echo $page['title']; ?></a>
   <p><?php echo $page['url']; ?></p>
@@ -23,6 +24,7 @@
   <?php echo date('Y/m/d', strtotime($page['updated_at'])); ?>
   <a href="/pages/edit_page/<?php echo $page['title']; ?>">Edit</a>
   <a href="/pages/delete_page/<?php echo $page['title']; ?>">Delete</a>
+  <?php endif ?>
   <?php endforeach ?>
 
 
