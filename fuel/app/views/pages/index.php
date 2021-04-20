@@ -1,4 +1,4 @@
-<div id="student-manage" class="main-right mt40 pt40">
+<div id="student-manage" class="main-right mt40">
   <?php if ($err_msg): ?>
   <h1>対象のWebページが見つかりません。入力したURLに、間違いがないか確認してください。<br> エラーメッセージ : <?= $err_msg ?></h1>
   <?php endif ?>

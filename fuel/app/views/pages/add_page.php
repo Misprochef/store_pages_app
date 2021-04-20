@@ -1,4 +1,4 @@
-<div id="form" class="pt40 mt40">
+<div id="student-manage" class="main-right mt40">
   <?php
   use Fuel\Core\Form;
 
