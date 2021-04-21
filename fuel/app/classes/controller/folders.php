@@ -56,13 +56,18 @@ class Controller_Folders extends Controller_Template
                                                                           'title_not_getted' => true,
                                                                           'folders' => $folders_data]));
                 } else {
-                    $page->title = $matches[1];
+                    if (count($matches[1]) >= 2) {
+                        $page->title = array($matches[1][0]);
+                    } else {
+                        $page->title = $matches[1];
+                    }
                 }
             }
             $page->folder_id = Model_Folders::get_by_name(Input::param('folder'))[0]['id'];
             $page->created_at = date("Y/m/d H:i:s");
             $page->updated_at = date("Y/m/d H:i:s");
             
+            $page->id = array(Model_Pages::count() + 1);
             $ret_arr = Model_Get_Img::getImg($page);
             if (!$ret_arr) {
                 // このケースは存在しないはずだが、一応分岐を用意
@@ -73,6 +78,7 @@ class Controller_Folders extends Controller_Template
                 $page->img_path = $ret_arr['path'];
             }
             if ($page->validates()) {
+                unset($page->id);
                 $page->save();
                 Response::redirect("folders/folder_pages/$folder_name");
             }

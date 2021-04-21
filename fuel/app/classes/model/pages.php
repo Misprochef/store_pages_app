@@ -31,17 +31,16 @@ class Model_Get_Img extends Model
 {
     public static function getFav($page_data)
     {
-        $save_dir = sprintf(dirname(__FILE__, 5) . '/public/assets/img/%s', $page_data->title[0]);
+        $save_dir = sprintf(dirname(__FILE__, 5) . '/public/assets/img/%s', $page_data->id[0]);
         if (!file_exists($save_dir)) {
             mkdir($save_dir);
         }
 
         $domain = parse_url($page_data->url)['host'];
-        // $data = @file_get_contents("http://www.google.com/s2/favicons?domain=$domain");
         $data = @file_get_contents("https://api.statvoo.com/favicon/?url=$domain");
         $fav_path = sprintf('%s/fav_%s.png', $save_dir, $domain);
         @file_put_contents($fav_path, $data);
-        $save_dir_for_asset_class = sprintf('%s/fav_%s.png', $page_data->title[0], $domain);
+        $save_dir_for_asset_class = sprintf('%s/fav_%s.png', $page_data->id[0], $domain);
         return array('img_type' => 'favicon', 'path' => $save_dir_for_asset_class);
     }
 
@@ -64,7 +63,7 @@ class Model_Get_Img extends Model
             }
         }
         
-        $save_dir = sprintf(dirname(__FILE__, 5) . '/public/assets/img/%s', $page_data->title[0]);
+        $save_dir = sprintf(dirname(__FILE__, 5) . '/public/assets/img/%s', $page_data->id[0]);
         if (!file_exists($save_dir)) {
             mkdir($save_dir);
         }
@@ -93,10 +92,10 @@ class Model_Get_Img extends Model
             }
             
             if ($is_in_page_img) {
-                $save_dir_for_asset_class = sprintf('%s/%s_%s', $page_data->title[0], $k, $fname_tmp[0]);
+                $save_dir_for_asset_class = sprintf('%s/%s_%s', $page_data->id[0], $k, $fname_tmp[0]);
                 return array('img_type' => 'in_page_img', 'path' => $save_dir_for_asset_class);
             } else {
-                $save_dir_for_asset_class = sprintf('%s/%s_%s', $page_data->title[0], 'og_img_', $fname_tmp[0]);
+                $save_dir_for_asset_class = sprintf('%s/%s_%s', $page_data->id[0], 'og_img_', $fname_tmp[0]);
                 return array('img_type' => 'og_img', 'path' => $save_dir_for_asset_class);
             }
         }

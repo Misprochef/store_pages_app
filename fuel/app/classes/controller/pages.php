@@ -49,18 +49,22 @@ class Controller_Pages extends Controller_Template
                     $html_source = file_get_contents($target_url);
                 } catch (PhpErrorException $exc) {
                     $view->set(array('err_msg' => $exc->getMessage(),
-                                     'title_name' => $title_name,
-                                     'pages_not_in_folder' => $pages_not_in_folder,
-                                     'pages_in_folder_arr' => $pages_in_folder));
+                    'title_name' => $title_name,
+                    'pages_not_in_folder' => $pages_not_in_folder,
+                    'pages_in_folder_arr' => $pages_in_folder));
                     return;
                 }
                 preg_match_all('{<title>(.*?)</title>}', $html_source, $matches);
                 if (!isset($matches[1]) or count($matches[1]) === 0) {
                     return Response::forge(View::forge('pages/add_page', ['err_msg' => null,
-                                                                          'title_not_getted' => true,
-                                                                          'folders' => $folders_data]));
+                    'title_not_getted' => true,
+                    'folders' => $folders_data]));
                 } else {
-                    $page->title = $matches[1];
+                    if (count($matches[1]) >= 2) {
+                        $page->title = array($matches[1][0]);
+                    } else {
+                        $page->title = $matches[1];
+                    }
                 }
             }
             if (Input::param('folder') != null) {
@@ -70,6 +74,7 @@ class Controller_Pages extends Controller_Template
             $page->created_at = date("Y/m/d H:i:s");
             $page->updated_at = date("Y/m/d H:i:s");
             
+            $page->id = array(Model_Pages::count() + 1);
             $ret_arr = Model_Get_Img::getImg($page);
             if (!$ret_arr) {
                 // このケースは存在しないはずだが、一応分岐を用意
@@ -80,6 +85,7 @@ class Controller_Pages extends Controller_Template
                 $page->img_path = $ret_arr['path'];
             }
             if ($page->validates()) {
+                unset($page->id);
                 $page->save();
                 Response::redirect("pages/index");
             }
@@ -120,7 +126,11 @@ class Controller_Pages extends Controller_Template
                                 'folders' => $folders_data]);
                     return;
                 } else {
-                    $page->title = $matches[1];
+                    if (count($matches[1]) >= 2) {
+                        $page->title = array($matches[1][0]);
+                    } else {
+                        $page->title = $matches[1];
+                    }
                 }
             }
             if (Input::param('folder') != null) {
@@ -130,6 +140,7 @@ class Controller_Pages extends Controller_Template
             $page->created_at = date("Y/m/d H:i:s");
             $page->updated_at = date("Y/m/d H:i:s");
             
+            $page->id = array(Model_Pages::count() + 1);
             $ret_arr = Model_Get_Img::getImg($page);
             if (!$ret_arr) {
                 // このケースは存在しないはずだが、一応分岐を用意
@@ -140,23 +151,29 @@ class Controller_Pages extends Controller_Template
                 $page->img_path = $ret_arr['path'];
             }
             if ($page->validates()) {
+                unset($page->id);
                 $page->save();
                 Response::redirect("pages/index");
             }
         }
     }
                             
-    public function action_edit_page($title = null)
+    public function action_edit_page($id = null)
     {
+        // $titleを引数とすると、viewから値が改変されて渡ってくる場合がある→なぜ？
+        // $page = Model_Pages::find_by('title', $title);
+        // 元々、上記コードでの実装をしており、これは配列で返す（find_by_pkはインスタンスで返す）
+
         $folders_data = Model_Folders::get_all();
         $this->template->folders = $folders_data;
 
-        $page = Model_Pages::find_by('title', $title);
+        $page = array(Model_Pages::find_by_pk($id));
         if (!($page)) {
             throw new HttpNotFoundException();
         }
-
-        $page_id = $page[0]->id;
+        
+        $page_id = $id;
+        $title = $page[0]->title;
         $page_url = $page[0]->url;
         $page_folder_id = $page[0]->folder_id;
         if ($page_folder_id) {
@@ -200,15 +217,14 @@ class Controller_Pages extends Controller_Template
         }
     }
                                                     
-    public function action_delete_page($title = null)
+    public function action_delete_page($id = null)
     {
-        $page = Model_Pages::find_by('title', $title);
+        $page = array(Model_Pages::find_by_pk($id));
         if (!($page)) {
             throw new HttpNotFoundException();
         }
         
-        $page_id = $page[0]->id;
-        $page = Model_Pages::forge()->set(array('id' => $page_id, 'deleted_at' => date("Y/m/d H:i:s")))->is_new(false);
+        $page = Model_Pages::forge()->set(array('id' => $id, 'deleted_at' => date("Y/m/d H:i:s")))->is_new(false);
         if ($page->validates()) {
             $page->save();
             Response::redirect('pages/index');

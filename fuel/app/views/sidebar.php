@@ -1,38 +1,41 @@
 <div id="sidebar" class="pl20">
   <aside class="flex" style="flex-direction: column;">
-    <h2 class="mb10" style="font-size: 20px;">Folders</h2>
-    <button data-bind="click: mutualConvRegAndEdit">編集</button>
+    <span class="flex">
+      <h2 class="mb10" style="font-size: 20px;">
+        <a href="/folders/index" class="bold">Folders</a>
+      </h2>
+      <button onclick="location.href='/folders/add_folder/'" class="ml30 btn">追加</button>
+      <button data-bind="click: mutualConvRegAndEdit" class="ml5 btn">編集</button>
+    </span>
     <span class="pt10 pb10 mt10 mb10" data-bind="style: colorHerePath('/pages/index')">
       <a href="/pages/index" class="ml10" data-bind="style: colorHerePath('/pages/index')">ホーム</a>
     </span>
     <?php if ($folders): ?>
     <?php foreach ($folders as $folder): ?>
     <?php $thisPath = "/folders/folder_pages/{$folder['name']}"; ?>
-    <span class="pt5 pb5 mt5 mb5" data-bind="style: colorHerePath('<?= $thisPath; ?>')">
+    <span class="pt5 pb5 flex justify-between" data-bind="style: colorHerePath('<?= $thisPath; ?>')">
       <a href="<?= $thisPath; ?>" class="pt5 pb5 ml20"
         data-bind="style: colorHerePath('<?= $thisPath; ?>')"><?php echo $folder['name']; ?></a>
-      <span data-bind="visible: stateBool">
-        <a href="/folders/edit_folder/<?php echo $folder['name']; ?>" class="ml10">編集</a>
-        <a href="/folders/delete_folder/<?php echo $folder['name']; ?>">削除</a>
+      <span data-bind="visible: stateBool" class="flex" style="flex-direction: column;">
+        <a href="/folders/edit_folder/<?php echo $folder['name']; ?>" class="mb5">編集</a>
+        <a href="/folders/delete_folder/<?php echo $folder['name']; ?>" class="">削除</a>
       </span>
     </span>
     <?php endforeach ?>
     <?php endif ?>
-    <a href="/folders/add_folder/<?php echo $folder['name']; ?>" class="ml20 mt30">フォルダーを追加</a>
-    <!-- <a href="/folders/index">フォルダーの一覧</a> -->
 
-    <div class="mt40">
+    <div class="mt30">
       <?php
         if ($title == "Store Pages App index-page" or $title == "Store Pages App フォルダー内のページ一覧"):
       ?>
 
-      <span class="pt40 mt40">ページの登録</span>
+      <p class="mb10" style="font-size: medium; font-weight: bold;">ページの登録</p>
       <?php echo Form::open() ?>
       <?php echo Form::hidden(Config::get('security.csrf_token_key'), Security::fetch_token()) ?>
 
-      url : <?php echo Form::input('url', null, array('required' => 'required')) ?><br />
+      URL : <?php echo Form::input('url', null, array('required' => 'required', 'class' => 'mb10')) ?>
       タイトル :
-      <?php echo Form::input('title', null, array('type' => 'text', 'placeholder' => '（記入がない場合は自動抽出）')) ?><br />
+      <?php echo Form::input('title', null, array('type' => 'text', 'placeholder' => '(記入がない場合は自動抽出)', 'class' => 'mb10')) ?><br />
 
       <?php
           $arr_folder = array();
@@ -43,12 +46,16 @@
 
       <?php if ($title == "Store Pages App index-page"): ?>
       フォルダーを選択 :
-      <?php echo Form::select('folder', '', array_merge(array(null => '登録しない'), $arr_folder)) ?>
-      <?php echo Form::submit('submit_btn', '送信') ?>
+      <span class="flex">
+        <?php echo Form::select('folder', '', array_merge(array(null => '登録しない'), $arr_folder), ['class' => 'dropdown']) ?>
+        <?php echo Form::submit('submit_btn', '送信', ['class' => 'btn btn-blue ml30']) ?>
+      </span>
 
       <?php elseif ($title == "Store Pages App フォルダー内のページ一覧"): ?>
-      <?php echo Form::select('folder', $folder_name, array_merge(array(null => '登録しない'), $arr_folder), ['style' => 'display: none;']) ?>
-      <?php echo Form::submit('submit_btn', 'このフォルダー内に追加') ?>
+      <span class="flex">
+        <?php echo Form::select('folder', $folder_name, array_merge(array(null => '登録しない'), $arr_folder), ['style' => 'display: none;']) ?>
+        <?php echo Form::submit('submit_btn', 'このフォルダー内に追加', ['class' => 'btn btn-blue mt10']) ?>
+      </span>
       <?php endif ?>
 
       <?php echo Form::close() ?>

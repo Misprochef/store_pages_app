@@ -1,33 +1,34 @@
 <div id="student-manage" class="main-right">
-  <?php if ($err_msg): ?>
-  <h1>対象のWebページが見つかりません。入力したURLに、間違いがないか確認してください。<br> エラーメッセージ : <?= $err_msg ?></h1>
-  <?php endif ?>
 
-  <div id="students">
-    <div id="student_list">
-      <h2 class="ml40 mb30" style="font-size: 25px;">All Pages</h2>
-      <ul class="list-group flex flex-wrap" style="justify-content: space-around;">
-        <?php
-        $num = 0;
-        foreach ($pages_not_in_folder as $page):
-        $num++;
-        ?>
-        <?php if ($page): ?>
-        <li id=":<?= $num ?>" class="mb30" style="width: 350px; height: 300px; padding: 15px; background-color: white;">
-          <div class="list-item-header flex" style="flex-direction: column;"">
+  <div>
+    <span class="flex flex-wrap ml40 mb30" style="justify-content: space-between; margin-right: 180px;">
+      <?php if ($err_msg): ?>
+      <h2 class="mb30" style="font-size: 25px;">対象のWebページが見つかりません。入力したURLに、間違いがないか確認してください。<br> エラーメッセージ :
+        <?= $err_msg ?></h2>
+      <?php endif ?>
+      <h2 style="font-size: 25px;">All Pages</h2>
+      <span style="width: 20%;"></span>
+      <button data-bind="click: mutualConvRegAndEditPage" class="mr40 mt10 btn header-btn">編集</button>
+    </span>
+    <ul class="list-group flex flex-wrap">
+      <span style="width: 100%;"></span>
+      <?php if ($pages_not_in_folder): ?>
+      <?php foreach ($pages_not_in_folder as $page): ?>
+      <li class="mb30 ml30" style="width: 350px; height: 300px; padding: 15px; background-color: white;">
+        <div class="list-item-header flex" style="flex-direction: column;"">
             <a href=<?php echo $page['url']; ?> target=" _blank" rel="noreferrer"><?php echo $page['title']; ?></a>
-            <div class="flex" style="justify-content: space-between;">
-              <span data-bind="visible: stateBoolIndex" class="mt5 mr20">
-                <a href="/pages/edit_page/<?php echo $page['title']; ?>">編集</a>
-                <a href="/pages/delete_page/<?php echo $page['title']; ?>">削除</a>
-              </span>
-              <p class="mt5">
-                <?php echo date('Y/m/d', strtotime($page['updated_at'])); ?>
-              </p>
-            </div>
+          <div class="flex" style="justify-content: space-between;">
+            <p class="mt5">
+              <?php echo date('Y/m/d', strtotime($page['updated_at'])); ?>
+            </p>
+            <span data-bind="visible: stateBoolIndex" class="mt5 mr20">
+              <a href="/pages/edit_page/<?php echo $page['id']; ?>">編集</a>
+              <a href="/pages/delete_page/<?php echo $page['id']; ?>" class="ml5">削除</a>
+            </span>
           </div>
-          <div class="list-item-body">
-            <?php
+        </div>
+        <div class="list-item-body">
+          <?php
             if ($page['img_path']) {
                 echo Asset::img($page['img_path'], ['style' => 'aspect-ratio: 16 / 9;', 'class' => 'w100']);
             } elseif ($page['fav_path']) {
@@ -36,43 +37,55 @@
                 echo 'img or favicon not found';
             }
             ?>
-          </div>
-        </li>
-        <?php endif ?>
-        <?php endforeach ?>
-      </ul>
-    </div>
+        </div>
+      </li>
+      <?php endforeach ?>
+      <?php endif ?>
+    </ul>
   </div>
-
 
   <?php if ($pages_in_folder_arr != array()): ?>
   <?php foreach ($pages_in_folder_arr as $pages_in_folder => $pages): ?>
-  <h1><?= $pages_in_folder?></h1>
-
-  <?php if ($pages): ?>
-  <?php foreach ($pages as $page): ?>
-  <p><?php echo $page['id']; ?></p>
-  <a href=<?php echo $page['url']; ?> target="_blank" rel="noreferrer"><?php echo $page['title']; ?></a>
-  <p><?php echo $page['url']; ?></p>
-  <?php
-  if ($page['img_path']) {
-      echo Asset::img($page['img_path']);
-  } elseif ($page['fav_path']) {
-      echo Asset::img($page['fav_path']);
-  } else {
-      echo 'img or favicon not found';
-  }
-  ?>
-  <?php echo date('Y/m/d', strtotime($page['updated_at'])); ?>
-  <span data-bind="visible: stateBoolIndex">
-    <a href="/pages/edit_page/<?php echo $page['title']; ?>">編集</a>
-    <a href="/pages/delete_page/<?php echo $page['title']; ?>">削除</a>
-  </span>
+  <div class="mt40 pt10">
+    <span class="flex ml40 mb30" style="justify-content: space-between; margin-right: 180px;">
+      <h2 class="" style="font-size: 25px;"><?= $pages_in_folder?></h2>
+      <button data-bind="click: mutualConvRegAndEditPage" class="mr40 mt10 btn header-btn">編集</button>
+    </span>
+    <ul class="list-group flex flex-wrap">
+      <?php if ($pages): ?>
+      <?php foreach ($pages as $page): ?>
+      <li class="mb30 ml30" style="width: 350px; height: 300px; padding: 15px; background-color: white;">
+        <div class="list-item-header flex" style="flex-direction: column;"">
+            <a href=<?php echo $page['url']; ?> target=" _blank" rel="noreferrer"><?php echo $page['title']; ?></a>
+          <div class="flex" style="justify-content: space-between;">
+            <p class="mt5">
+              <?php echo date('Y/m/d', strtotime($page['updated_at'])); ?>
+            </p>
+            <span data-bind="visible: stateBoolIndex" class="mt5 mr20">
+              <a href="/pages/edit_page/<?php echo $page['id']; ?>">編集</a>
+              <a href="/pages/delete_page/<?php echo $page['id']; ?>" class="ml5">削除</a>
+            </span>
+          </div>
+        </div>
+        <div class="list-item-body">
+          <?php
+            if ($page['img_path']) {
+                echo Asset::img($page['img_path'], ['style' => 'aspect-ratio: 16 / 9;', 'class' => 'w100']);
+            } elseif ($page['fav_path']) {
+                echo Asset::img($page['fav_path'], ['style' => 'width: 60%; margin-left: 20%;', 'class' => 'mb20']);
+            } else {
+                echo 'img or favicon not found';
+            }
+            ?>
+        </div>
+      </li>
+      <?php endforeach ?>
+      <?php endif ?>
+    </ul>
+  </div>
   <?php endforeach ?>
   <?php endif ?>
 
-  <?php endforeach ?>
-  <?php endif ?>
 </div>
 
 <script type="text/javascript" src="/assets/js/knockout-3.5.1.js"></script>
