@@ -1,4 +1,4 @@
-<div class="mt40">
+<div>
   <h1>フォルダーの一覧</h1>
   <?php foreach ($folders as $folder): ?>
   <section>

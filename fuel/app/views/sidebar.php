@@ -1,20 +1,25 @@
-<div id="sidebar">
-  <aside>
-    <h1>サイドバー</h1>
+<div id="sidebar" class="pl20">
+  <aside class="flex" style="flex-direction: column;">
+    <h2 class="mb10" style="font-size: 20px;">Folders</h2>
     <button data-bind="click: mutualConvRegAndEdit">編集</button>
+    <span class="pt10 pb10 mt10 mb10" data-bind="style: colorHerePath('/pages/index')">
+      <a href="/pages/index" class="ml10" data-bind="style: colorHerePath('/pages/index')">ホーム</a>
+    </span>
+    <?php if ($folders): ?>
     <?php foreach ($folders as $folder): ?>
-    <section>
-      <a href="/folders/folder_pages/<?php echo $folder['name']; ?>"><?php echo $folder['name']; ?></a>
+    <?php $thisPath = "/folders/folder_pages/{$folder['name']}"; ?>
+    <span class="pt5 pb5 mt5 mb5" data-bind="style: colorHerePath('<?= $thisPath; ?>')">
+      <a href="<?= $thisPath; ?>" class="pt5 pb5 ml20"
+        data-bind="style: colorHerePath('<?= $thisPath; ?>')"><?php echo $folder['name']; ?></a>
       <span data-bind="visible: stateBool">
-        <a href="/folders/edit_folder/<?php echo $folder['name']; ?>">Edit</a>
-        <a href="/folders/delete_folder/<?php echo $folder['name']; ?>">Delete</a>
+        <a href="/folders/edit_folder/<?php echo $folder['name']; ?>" class="ml10">編集</a>
+        <a href="/folders/delete_folder/<?php echo $folder['name']; ?>">削除</a>
       </span>
-    </section>
+    </span>
     <?php endforeach ?>
-    <a href="/folders/add_folder/<?php echo $folder['name']; ?>">フォルダーを追加</a>
-    <br>
-    <br>
-    <a href="/folders/index">フォルダーの一覧</a>
+    <?php endif ?>
+    <a href="/folders/add_folder/<?php echo $folder['name']; ?>" class="ml20 mt30">フォルダーを追加</a>
+    <!-- <a href="/folders/index">フォルダーの一覧</a> -->
 
     <div class="mt40">
       <?php
@@ -53,21 +58,27 @@
   </aside>
 </div>
 
+<script type="text/javascript" src="/assets/js/knockout-3.5.1.js"></script>
 <script>
 let viewModel = {
-  state: ko.observable('Regular'),
   stateBool: ko.observable(false),
   mutualConvRegAndEdit: function() {
     if (this.stateBool() === false) {
-      this.state('Edit');
       this.stateBool(true);
     } else if (this.stateBool() === true) {
-      this.state('Regular');
       this.stateBool(false);
     }
   },
   stateBoolIndex: null,
-  mutualConvRegAndEditPage: null
+  mutualConvRegAndEditPage: null,
+  colorHerePath: function(path) {
+    if (path == decodeURIComponent(location.pathname)) {
+      return {
+        backgroundColor: 'darkgray',
+        color: 'white'
+      }
+    }
+  }
 };
 ko.applyBindings(viewModel);
 </script>

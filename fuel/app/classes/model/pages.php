@@ -37,7 +37,8 @@ class Model_Get_Img extends Model
         }
 
         $domain = parse_url($page_data->url)['host'];
-        $data = @file_get_contents("http://www.google.com/s2/favicons?domain=$domain");
+        // $data = @file_get_contents("http://www.google.com/s2/favicons?domain=$domain");
+        $data = @file_get_contents("https://api.statvoo.com/favicon/?url=$domain");
         $fav_path = sprintf('%s/fav_%s.png', $save_dir, $domain);
         @file_put_contents($fav_path, $data);
         $save_dir_for_asset_class = sprintf('%s/fav_%s.png', $page_data->title[0], $domain);

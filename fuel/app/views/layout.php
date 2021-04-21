@@ -9,7 +9,7 @@
 <body>
   <header>
     <div id="header">
-      <a class="" id="logo" href="/pages/index">
+      <a class="pl20" id="logo" href="/pages/index">
         <span> Store Pages App</span>
       </a>
       <!-- <a href="/pages/index" class="btn header-btn">Home</a> -->
@@ -22,7 +22,7 @@
     </div>
   </header>
 
-  <main>
+  <main style="background-color: #F5F5F5;">
     <div class="flex">
       <?php
     if ($disp_sidebar) {
