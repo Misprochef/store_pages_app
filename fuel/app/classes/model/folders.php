@@ -5,55 +5,72 @@ use Fuel\Core\Model;
 
 class Model_Folders extends Model
 {
-    public static function get_all()
+    public static function res_folder_db($type_of_operation = null, $folder_param = null)
     {
-        $results = DB::select()->from('folders')
-        ->where('deleted_at', '=', null)->execute();
-        return $results->as_array();
-    }
+        $query_selected = DB::select()->from('folders');
 
-    public static function get_by_name($folder_name)
-    {
-        $results = DB::select()->from('folders')
-        ->where('name', '=', $folder_name)->limit(1)->execute();
-        return $results->as_array();
-    }
+        if ($type_of_operation === 'get_all') {
+            $results = $query_selected
+            ->where('deleted_at', '=', null)
+            ->execute();
+        } elseif ($type_of_operation === 'get_arr_for_select') {
+            $arr_folder = [null => '登録しない'];
+            $folders = $folder_param;
+            if (!$folders) {
+                return $arr_folder;
+            } else {
+                foreach ($folders as $folder) {
+                    $arr_folder = array_merge($arr_folder, [$folder['name'] => $folder['name']]);
+                }
+                return $arr_folder;
+            }
+        } elseif ($type_of_operation === 'get_by_name') {
+            $results = $query_selected
+            ->where('name', '=', $folder_param)
+            ->and_where('deleted_at', '=', null)
+            ->execute();
+        } elseif ($type_of_operation === 'get_by_id') {
+            $results = $query_selected
+            ->where('id', '=', $folder_param)
+            ->and_where('deleted_at', '=', null)
+            ->execute();
+        } elseif ($type_of_operation === 'insert') {
+            $search_result = $query_selected
+            ->where('name', '=', $folder_param)
+            ->and_where('deleted_at', '=', null)
+            ->execute();
+            if ($search_result->as_array()) {
+                return false;
+            } else {
+                DB::insert('folders')
+                ->set(['name' => $folder_param])
+                ->execute();
+                return;
+            }
+        } elseif ($type_of_operation === 'update') {
+            $new_folder_name = $folder_param[0];
+            $folder_id = $folder_param[1];
 
-    public static function get_by_id($folder_id)
-    {
-        $results = DB::select()->from('folders')
-        ->where('id', '=', $folder_id)->execute();
-        return $results->as_array();
-    }
-
-    public static function insert($folder_name)
-    {
-        $search_result = DB::select()->from('folders')
-        ->where_open()->where('name', '=', $folder_name)
-        ->and_where('deleted_at', '=', null)->where_close()->execute();
-        if ($search_result->as_array()) {
-            return false;
-        } else {
-            DB::insert('folders')->set(['name' => $folder_name])->execute();
+            $search_result = $query_selected
+            ->where('name', '=', $new_folder_name)
+            ->and_where('deleted_at', '=', null)
+            ->execute();
+            if ($search_result->as_array()) {
+                return false;
+            } else {
+                DB::update('folders')
+                ->set(['name' => $new_folder_name])
+                ->where('id', '=', $folder_id)
+                ->execute();
+                return;
+            }
+        } elseif ($type_of_operation === 'logical_delete') {
+            DB::update('folders')
+            ->set(['deleted_at' => date("Y/m/d H:i:s")])
+            ->where('id', '=', $folder_param)
+            ->execute();
+            return;
         }
-    }
-
-    public static function update($new_folder_name, $folder_id)
-    {
-        $search_result = DB::select()->from('folders')
-        ->where_open()->where('name', '=', $new_folder_name)
-        ->and_where('deleted_at', '=', null)->where_close()->execute();
-        if ($search_result->as_array()) {
-            return false;
-        } else {
-            DB::update('folders')->set(['name' => $new_folder_name])
-            ->where('id', '=', $folder_id)->execute();
-        }
-    }
-
-    public static function logical_delete($folder_name)
-    {
-        DB::update('folders')->set(['deleted_at' => date("Y/m/d H:i:s")])
-        ->where('name', '=', $folder_name)->execute();
+        return $results->as_array();
     }
 }

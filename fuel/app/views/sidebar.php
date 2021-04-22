@@ -18,7 +18,7 @@
         data-bind="style: colorHerePath('<?= $thisPath; ?>')"><?php echo $folder['name']; ?></a>
       <span data-bind="visible: stateBool" class="flex" style="flex-direction: column;">
         <a href="/folders/edit_folder/<?php echo $folder['name']; ?>" class="mb5">編集</a>
-        <a href="/folders/delete_folder/<?php echo $folder['name']; ?>" class="">削除</a>
+        <a href="/folders/delete_folder/<?php echo $folder['id']; ?>" class="">削除</a>
       </span>
     </span>
     <?php endforeach ?>
@@ -37,23 +37,16 @@
       タイトル :
       <?php echo Form::input('title', null, array('type' => 'text', 'placeholder' => '(記入がない場合は自動抽出)', 'class' => 'mb10')) ?><br />
 
-      <?php
-          $arr_folder = array();
-          foreach ($folders as $folder) {
-              $arr_folder = array_merge($arr_folder, array($folder['name'] => $folder['name']));
-          }
-          ?>
-
       <?php if ($title == "Store Pages App index-page"): ?>
       フォルダーを選択 :
       <span class="flex">
-        <?php echo Form::select('folder', '', array_merge(array(null => '登録しない'), $arr_folder), ['class' => 'dropdown']) ?>
+        <?php echo Form::select('folder', '', $arr_folder, ['class' => 'dropdown']) ?>
         <?php echo Form::submit('submit_btn', '送信', ['class' => 'btn btn-blue ml30']) ?>
       </span>
 
       <?php elseif ($title == "Store Pages App フォルダー内のページ一覧"): ?>
       <span class="flex">
-        <?php echo Form::select('folder', $folder_name, array_merge(array(null => '登録しない'), $arr_folder), ['style' => 'display: none;']) ?>
+        <?php echo Form::select('folder', $folder_name, $arr_folder, ['style' => 'display: none;']) ?>
         <?php echo Form::submit('submit_btn', 'このフォルダー内に追加', ['class' => 'btn btn-blue mt10']) ?>
       </span>
       <?php endif ?>

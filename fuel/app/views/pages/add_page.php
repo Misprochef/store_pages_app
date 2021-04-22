@@ -12,15 +12,10 @@
     URL : <?php echo Form::input('url', null, array('required' => 'required', 'class' => 'mb10')) ?><br />
     タイトル :
     <?php echo Form::input('title', null, array('type' => 'text', 'placeholder' => '(記入がない場合は自動抽出)', 'class' => 'mb10')) ?><br />
-    <?php
-    $arr_folder = array();
-    foreach ($folders as $folder) {
-        $arr_folder = array_merge($arr_folder, array($folder['name'] => $folder['name']));
-    }
-    ?>
+
     フォルダーを選択 :
     <span class="flex">
-      <?php echo Form::select('folder', '', array_merge(array(null => '登録しない'), $arr_folder), ['class' => 'dropdown']) ?>
+      <?php echo Form::select('folder', '', $arr_folder, ['class' => 'dropdown']) ?>
       <?php echo Form::submit('submit_btn', '送信', ['class' => 'btn btn-blue ml30']) ?>
     </span>
 
