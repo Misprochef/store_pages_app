@@ -1,6 +1,28 @@
-<div id="student-manage" class="main-right">
+<div id="pages-index" class="main-right">
 
   <div>
+    <div id="main">
+      <h3>Tasks</h3>
+      <div class="container" data-bind="sortable: tasks">
+        <div class="item">
+          <span data-bind="visible: !$root.isTaskSelected($data)">
+            <a href="#" data-bind="text: name, click: $root.selectedTask"></a>
+          </span>
+          <span data-bind="visibleAndSelect: $root.isTaskSelected($data)">
+            <input data-bind="value: name, event: { blur: $root.clearTask }" />
+          </span>
+        </div>
+      </div>
+      <a href="#" data-bind="click: addTask">Add Task</a>
+    </div>
+
+    <div id="results">
+      <h3>Tasks</h3>
+      <ul data-bind="foreach: tasks">
+        <li data-bind="text: name"></li>
+      </ul>
+    </div>
+
     <span class="flex flex-wrap ml40 mb30" style="justify-content: space-between; margin-right: 180px;">
       <?php if ($err_msg): ?>
       <h2 class="mb30" style="font-size: 25px;">対象のWebページが見つかりません。入力したURLに、間違いがないか確認してください。<br> エラーメッセージ :
@@ -87,23 +109,77 @@
   <?php endif ?>
 
 </div>
+<!-- <script type="text/javascript" src="/assets/js/knockout-3.5.1.js"></script> -->
 
-<script type="text/javascript" src="/assets/js/knockout-3.5.1.js"></script>
+<!-- <script src="/assets/js/jquery-ui-1.12.1/external/jquery/jquery.js"></script> -->
+<!-- <script src="/assets/js/jquery-ui-1.12.1/jquery-ui.min.js"></script> -->
+<!-- <script src="/assets/js/knockout-sortable.min.js"></script> -->
 <script>
-let viewModelIndex = {
-  stateBoolIndex: ko.observable(false),
-  mutualConvRegAndEditPage: function() {
-    if (this.stateBoolIndex() === false) {
-      this.stateBoolIndex(true);
-    } else if (this.stateBoolIndex() === true) {
-      this.stateBoolIndex(false);
-    }
-  },
-  stateBool: null,
-  mutualConvRegAndEdit: null,
-  colorHerePath: function() {
-    return null
-  }
-};
-ko.applyBindings(viewModelIndex);
+// let viewModelIndex = {
+//   stateBoolIndex: ko.observable(false),
+//   mutualConvRegAndEditPage: function() {
+//     if (this.stateBoolIndex() === false) {
+//       this.stateBoolIndex(true);
+//     } else if (this.stateBoolIndex() === true) {
+//       this.stateBoolIndex(false);
+//     }
+//   },
+//   stateBool: null,
+//   mutualConvRegAndEdit: null,
+//   colorHerePath: function() {
+//     return null
+//   },
+// };
+
+// var Task = function(name) {
+//   this.name = ko.observable(name);
+// }
+
+
+// var ViewModelSortable = function() {
+//   var self = this;
+//   self.tasks = ko.observableArray([
+//     new Task("Get dog food"),
+//     new Task("Mow lawn"),
+//     new Task("Fix car"),
+//     new Task("Fix fence"),
+//     new Task("Walk dog"),
+//     new Task("Read book")
+//   ]);
+
+
+//   self.selectedTask = ko.observable();
+//   self.clearTask = function(data, event) {
+//     if (data === self.selectedTask()) {
+//       self.selectedTask(null);
+//     }
+
+//     if (data.name() === "") {
+//       self.tasks.remove(data);
+//     }
+//   };
+//   self.addTask = function() {
+//     var task = new Task("new");
+//     self.selectedTask(task);
+//     self.tasks.push(task);
+//   };
+
+//   self.isTaskSelected = function(task) {
+//     return task === self.selectedTask();
+//   };
+// };
+
+// //control visibility, give element focus, and select the contents (in order)
+// ko.bindingHandlers.visibleAndSelect = {
+//   update: function(element, valueAccessor) {
+//     ko.bindingHandlers.visible.update(element, valueAccessor);
+//     if (valueAccessor()) {
+//       setTimeout(function() {
+//         $(element).find("input").focus().select();
+//       }, 0); //new tasks are not in DOM yet
+//     }
+//   }
+// };
+
+// ko.applyBindings(new ViewModelSortable(), document.getElementById('pages-index'));
 </script>

@@ -1,4 +1,4 @@
-<div id="student-manage" class="main-right">
+<div id="folder-pages" class="main-right">
 
   <div>
     <span class="flex ml40 mb30" style="justify-content: space-between; margin-right: 180px;">
@@ -43,23 +43,3 @@
   </div>
 
 </div>
-
-<script type="text/javascript" src="/assets/js/knockout-3.5.1.js"></script>
-<script>
-let viewModelIndex = {
-  stateBoolIndex: ko.observable(false),
-  mutualConvRegAndEditPage: function() {
-    if (this.stateBoolIndex() === false) {
-      this.stateBoolIndex(true);
-    } else if (this.stateBoolIndex() === true) {
-      this.stateBoolIndex(false);
-    }
-  },
-  stateBool: null,
-  mutualConvRegAndEdit: null,
-  colorHerePath: function() {
-    return null
-  }
-};
-ko.applyBindings(viewModelIndex);
-</script>

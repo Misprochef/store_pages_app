@@ -80,5 +80,5 @@ let viewModel = {
     }
   }
 };
-ko.applyBindings(viewModel);
+ko.applyBindings(viewModel, document.getElementById('sidebar'));
 </script>
