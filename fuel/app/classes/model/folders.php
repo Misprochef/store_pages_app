@@ -5,36 +5,31 @@ use Fuel\Core\Model;
 
 class Model_Folders extends Model
 {
-    public static function get_data($type_of_operation = null, $folder_param = null)
+    public static function get_data($type = null, $folder_param = null)
     {
-        $query_selected = DB::select()->from('folders');
-        if ($type_of_operation === 'get_all') {
-            $results = $query_selected
-            ->where('deleted_at', '=', null)
-            ->execute();
-        } elseif ($type_of_operation === 'get_arr_for_select') {
-            $arr_folder = [null => '登録しない'];
-            $folders = $folder_param;
-            if (!$folders) {
-                return $arr_folder;
-            } else {
-                foreach ($folders as $folder) {
-                    $arr_folder = array_merge($arr_folder, [$folder['name'] => $folder['name']]);
-                }
-                return $arr_folder;
-            }
-        } elseif ($type_of_operation === 'get_by_name') {
-            $results = $query_selected
-            ->where('name', '=', $folder_param)
-            ->and_where('deleted_at', '=', null)
-            ->execute();
-        } elseif ($type_of_operation === 'get_by_id') {
-            $results = $query_selected
-            ->where('id', '=', $folder_param)
-            ->and_where('deleted_at', '=', null)
+        $query = DB::select()->from('folders')->where('deleted_at', '=', null);
+        
+        if ($type === 'all') {
+            $results = $query->execute();
+        } elseif ($type === 'id' or $type === 'name') {
+            $results = $query
+            ->and_where($type, '=', $folder_param)
             ->execute();
         }
         return $results->as_array();
+    }
+
+    public static function get_arr_for_select($folders_data)
+    {
+        $arr_folder = [null => '登録しない'];
+        if (!$folders_data) {
+            return $arr_folder;
+        } else {
+            foreach ($folders_data as $folder) {
+                $arr_folder = array_merge($arr_folder, [$folder['name'] => $folder['name']]);
+            }
+            return $arr_folder;
+        }
     }
 
     public static function insert($folder_name)
