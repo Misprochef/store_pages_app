@@ -109,77 +109,78 @@
   <?php endif ?>
 
 </div>
-<!-- <script type="text/javascript" src="/assets/js/knockout-3.5.1.js"></script> -->
+<script type="text/javascript" src="/assets/js/knockout-3.5.1.js"></script> -->
 
-<!-- <script src="/assets/js/jquery-ui-1.12.1/external/jquery/jquery.js"></script> -->
-<!-- <script src="/assets/js/jquery-ui-1.12.1/jquery-ui.min.js"></script> -->
-<!-- <script src="/assets/js/knockout-sortable.min.js"></script> -->
+<script src="/assets/js/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+<script src="/assets/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+<script src="/assets/js/knockout-sortable.min.js"></script>
 <script>
-// let viewModelIndex = {
-//   stateBoolIndex: ko.observable(false),
-//   mutualConvRegAndEditPage: function() {
-//     if (this.stateBoolIndex() === false) {
-//       this.stateBoolIndex(true);
-//     } else if (this.stateBoolIndex() === true) {
-//       this.stateBoolIndex(false);
+// let viewModelIndex = function() {
+//   this.stateBoolIndex = ko.observable(false),
+//     this.mutualConvRegAndEditPage = function() {
+//       if (this.stateBoolIndex() === false) {
+//         this.stateBoolIndex(true);
+//       } else if (this.stateBoolIndex() === true) {
+//         this.stateBoolIndex(false);
+//       }
+//     },
+//     this.stateBool = null,
+//     this.mutualConvRegAndEdit = null,
+//     this.colorHerePath = function() {
+//       return null
 //     }
-//   },
-//   stateBool: null,
-//   mutualConvRegAndEdit: null,
-//   colorHerePath: function() {
-//     return null
-//   },
-// };
-
-// var Task = function(name) {
-//   this.name = ko.observable(name);
 // }
 
-
-// var ViewModelSortable = function() {
-//   var self = this;
-//   self.tasks = ko.observableArray([
-//     new Task("Get dog food"),
-//     new Task("Mow lawn"),
-//     new Task("Fix car"),
-//     new Task("Fix fence"),
-//     new Task("Walk dog"),
-//     new Task("Read book")
-//   ]);
+var Task = function(name) {
+  this.name = ko.observable(name);
+}
 
 
-//   self.selectedTask = ko.observable();
-//   self.clearTask = function(data, event) {
-//     if (data === self.selectedTask()) {
-//       self.selectedTask(null);
-//     }
+var ViewModelSortable = function() {
+  var self = this;
+  self.tasks = ko.observableArray([
+    new Task("Get dog food"),
+    new Task("Mow lawn"),
+    new Task("Fix car"),
+    new Task("Fix fence"),
+    new Task("Walk dog"),
+    new Task("Read book")
+  ]);
 
-//     if (data.name() === "") {
-//       self.tasks.remove(data);
-//     }
-//   };
-//   self.addTask = function() {
-//     var task = new Task("new");
-//     self.selectedTask(task);
-//     self.tasks.push(task);
-//   };
 
-//   self.isTaskSelected = function(task) {
-//     return task === self.selectedTask();
-//   };
-// };
+  self.selectedTask = new ko.observable();
+  // self.selectedTask = ko.ComputedObservable();
+  self.clearTask = function(data, event) {
+    if (data === self.selectedTask()) {
+      self.selectedTask(null);
+    }
 
-// //control visibility, give element focus, and select the contents (in order)
-// ko.bindingHandlers.visibleAndSelect = {
-//   update: function(element, valueAccessor) {
-//     ko.bindingHandlers.visible.update(element, valueAccessor);
-//     if (valueAccessor()) {
-//       setTimeout(function() {
-//         $(element).find("input").focus().select();
-//       }, 0); //new tasks are not in DOM yet
-//     }
-//   }
-// };
+    if (data.name() === "") {
+      self.tasks.remove(data);
+    }
+  };
+  self.addTask = function() {
+    var task = new Task("new");
+    self.selectedTask(task);
+    self.tasks.push(task);
+  };
 
-// ko.applyBindings(new ViewModelSortable(), document.getElementById('pages-index'));
+  self.isTaskSelected = function(task) {
+    return task === self.selectedTask();
+  };
+};
+
+//control visibility, give element focus, and select the contents (in order)
+ko.bindingHandlers.visibleAndSelect = {
+  update: function(element, valueAccessor) {
+    ko.bindingHandlers.visible.update(element, valueAccessor);
+    if (valueAccessor()) {
+      setTimeout(function() {
+        $(element).find("input").focus().select();
+      }, 0); //new tasks are not in DOM yet
+    }
+  }
+};
+
+ko.applyBindings(new ViewModelSortable(), document.getElementById('pages-index'));
 </script>
