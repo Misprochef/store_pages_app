@@ -37,8 +37,8 @@
               class="mb20" style="width: 60%; margin-left: 20%;">
           </div>
         </li>
-        <?php endif ?>
       </ul>
+      <?php endif ?>
     </div>
 
     <?php if ($pages_in_folder_arr != array()): ?>

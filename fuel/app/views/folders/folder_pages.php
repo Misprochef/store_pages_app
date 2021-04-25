@@ -9,8 +9,8 @@
       <h2 style="font-size: 25px;"><?= $folder_name ?></h1>
         <button data-bind="click: mutualConvRegAndEditPage" class="mr40 mt10 btn header-btn">編集</button>
     </span>
+    <?php if ($pages): ?>
     <ul data-bind="sortable: cardsInFolder" class="list-group flex flex-wrap">
-      <?php if ($pages): ?>
       <li class="mb30 ml30" style="width: 350px; height: 300px; padding: 15px; background-color: white;">
         <div class="list-item-header flex" style="flex-direction: column;"">
           <a data-bind=" attr: { href: url }, click: ()=> true;, clickBubble: false, text: title" target=" _blank"
@@ -33,8 +33,8 @@
             class="mb20" style="width: 60%; margin-left: 20%;">
         </div>
       </li>
-      <?php endif ?>
     </ul>
+    <?php endif ?>
   </div>
 
 </div>
