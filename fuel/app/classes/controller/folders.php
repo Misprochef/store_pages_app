@@ -14,8 +14,8 @@ class Controller_Folders extends Controller_Template
         $this->template->disp_sidebar = false;
         $this->template->content = $view;
         
-        $folders_data = Model_Folders::res_folder_db('get_all');
-        $arr_folder = Model_Folders::res_folder_db('get_arr_for_select', $folders_data);
+        $folders_data = Model_Folders::get_data('all');
+        $arr_folder = Model_Folders::get_arr_for_select($folders_data);
         $this->template->arr_folder = $arr_folder;
 
         $view->set('folders', $folders_data);
@@ -28,15 +28,15 @@ class Controller_Folders extends Controller_Template
         $this->template->title = $title_name;
         $this->template->folder_name = $folder_name;
 
-        $folders_data = Model_Folders::res_folder_db('get_all');
+        $folders_data = Model_Folders::get_data('all');
         $this->template->folders = $folders_data;
-        $arr_folder = Model_Folders::res_folder_db('get_arr_for_select', $folders_data);
+        $arr_folder = Model_Folders::get_arr_for_select($folders_data);
         $this->template->arr_folder = $arr_folder;
 
         $this->template->disp_sidebar = true;
         $this->template->content = $view;
 
-        $folder_id = Model_Folders::res_folder_db('get_by_name', $folder_name)[0]['id'];
+        $folder_id = Model_Folders::get_data('name', $folder_name)[0]['id'];
         $pages_data = Model_Pages::desc_updated_at($folder_id);
         $view->set(array('err_msg' => null,
                          'pages' => $pages_data,
@@ -84,7 +84,7 @@ class Controller_Folders extends Controller_Template
                     }
                 }
             }
-            $page->folder_id = Model_Folders::res_folder_db('get_by_name', Input::param('folder'))[0]['id'];
+            $page->folder_id = Model_Folders::get_data('name', Input::param('folder'))[0]['id'];
             $page->created_at = date("Y/m/d H:i:s");
             $page->updated_at = date("Y/m/d H:i:s");
             
@@ -109,9 +109,9 @@ class Controller_Folders extends Controller_Template
         $view = View::forge('folders/add_folder');
         $this->template->title = "Store Pages App folderの追加";
 
-        $folders_data = Model_Folders::res_folder_db('get_all');
+        $folders_data = Model_Folders::get_data('all');
         $this->template->folders = $folders_data;
-        $arr_folder = Model_Folders::res_folder_db('get_arr_for_select', $folders_data);
+        $arr_folder = Model_Folders::get_arr_for_select($folders_data);
         $this->template->arr_folder = $arr_folder;
         $this->template->disp_sidebar = true;
         $this->template->content = $view;
@@ -119,7 +119,7 @@ class Controller_Folders extends Controller_Template
         $view->set(['err_msg' => null]);
 
         if (Input::param() != array()) {
-            $result = Model_Folders::res_folder_db('insert', Input::param('folder'));
+            $result = Model_Folders::insert(Input::param('folder'));
             if ($result === false) {
                 $view->set(['err_msg' => 'すでに存在しているフォルダー名です。別のフォルダー名を入力して下さい。']);
                 return;
@@ -134,15 +134,15 @@ class Controller_Folders extends Controller_Template
         $view = View::forge('folders/edit_folder');
         $this->template->title = "Store Pages App folderの編集";
 
-        $folders_data = Model_Folders::res_folder_db('get_all');
+        $folders_data = Model_Folders::get_data('all');
         $this->template->folders = $folders_data;
-        $arr_folder = Model_Folders::res_folder_db('get_arr_for_select', $folders_data);
+        $arr_folder = Model_Folders::get_arr_for_select($folders_data);
         $this->template->arr_folder = $arr_folder;
 
         $this->template->disp_sidebar = true;
         $this->template->content = $view;
 
-        $folder = Model_Folders::res_folder_db('get_by_name', $folder_name)[0];
+        $folder = Model_Folders::get_data('name', $folder_name)[0];
         if (!$folder) {
             throw new HttpNotFoundException();
         }
@@ -150,7 +150,7 @@ class Controller_Folders extends Controller_Template
         $view->set(['err_msg' => null, 'folder_name' => $folder_name]);
 
         if (Input::param() != array()) {
-            $result = Model_Folders::res_folder_db('update', [Input::param('folder'), $folder['id']]);
+            $result = Model_Folders::update(Input::param('folder'), $folder['id']);
             if ($result === false) {
                 $view->set(['err_msg' => 'すでに存在しているフォルダー名です。別のフォルダー名を入力して下さい。']);
                 return;
@@ -162,11 +162,11 @@ class Controller_Folders extends Controller_Template
 
     public function action_delete_folder($folder_id = null)
     {
-        $folders = Model_Folders::res_folder_db('get_by_id', $folder_id);
+        $folders = Model_Folders::get_data('id', $folder_id);
         if (!$folders) {
             throw new HttpNotFoundException();
         }
-        Model_Folders::res_folder_db('logical_delete', $folder_id);
+        Model_Folders::logical_delete($folder_id);
         Response::redirect("pages/index");
     }
 }

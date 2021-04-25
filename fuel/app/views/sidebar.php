@@ -60,7 +60,7 @@
 
 <script type="text/javascript" src="/assets/js/knockout-3.5.1.js"></script>
 <script>
-let viewModel = {
+let viewModelSidebar = {
   stateBool: ko.observable(false),
   mutualConvRegAndEdit: function() {
     if (this.stateBool() === false) {
@@ -80,5 +80,5 @@ let viewModel = {
     }
   }
 };
-ko.applyBindings(viewModel, document.getElementById('sidebar'));
+ko.applyBindings(viewModelSidebar, document.getElementById('sidebar'));
 </script>

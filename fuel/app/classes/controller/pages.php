@@ -18,9 +18,9 @@ class Controller_Pages extends Controller_Template
         $this->template->disp_sidebar = true;
         $this->template->content = $view;
         
-        $folders_data = Model_Folders::res_folder_db('get_all');
+        $folders_data = Model_Folders::get_data('all');
         $this->template->folders = $folders_data;
-        $arr_folder = Model_Folders::res_folder_db('get_arr_for_select', $folders_data);
+        $arr_folder = Model_Folders::get_arr_for_select($folders_data);
         $this->template->arr_folder = $arr_folder;
 
         $pages_not_in_folder = Model_Pages::desc_updated_at();
@@ -80,7 +80,7 @@ class Controller_Pages extends Controller_Template
                 }
             }
             if (Input::param('folder') != null) {
-                $selected_folder = Model_Folders::res_folder_db('get_by_name', Input::param('folder'));
+                $selected_folder = Model_Folders::get_data('name', Input::param('folder'));
                 $page->folder_id = $selected_folder[0]['id'];
             }
             $page->created_at = date("Y/m/d H:i:s");
@@ -104,9 +104,9 @@ class Controller_Pages extends Controller_Template
     
     public function action_add_page()
     {
-        $folders_data = Model_Folders::res_folder_db('get_all');
+        $folders_data = Model_Folders::get_data('all');
         $this->template->folders = $folders_data;
-        $arr_folder = Model_Folders::res_folder_db('get_arr_for_select', $folders_data);
+        $arr_folder = Model_Folders::get_arr_for_select($folders_data);
         $this->template->arr_folder = $arr_folder;
 
         $view = View::forge('pages/add_page', ['err_msg' => null,
@@ -159,7 +159,7 @@ class Controller_Pages extends Controller_Template
                 }
             }
             if (Input::param('folder') != null) {
-                $selected_folder = Model_Folders::res_folder_db('get_by_name', Input::param('folder'));
+                $selected_folder = Model_Folders::get_data('name', Input::param('folder'));
                 $page->folder_id = $selected_folder[0]['id'];
             }
             $page->created_at = date("Y/m/d H:i:s");
@@ -187,9 +187,9 @@ class Controller_Pages extends Controller_Template
         // $page = Model_Pages::find_by('title', $title);
         // 元々、上記コードでの実装をしており、これは配列で返す（find_by_pkはインスタンスで返す）
 
-        $folders_data = Model_Folders::res_folder_db('get_all');
+        $folders_data = Model_Folders::get_data('all');
         $this->template->folders = $folders_data;
-        $arr_folder = Model_Folders::res_folder_db('get_arr_for_select', $folders_data);
+        $arr_folder = Model_Folders::get_arr_for_select($folders_data);
         $this->template->arr_folder = $arr_folder;
 
         $page = array(Model_Pages::find_by_pk($id));
@@ -202,7 +202,7 @@ class Controller_Pages extends Controller_Template
         $page_url = $page[0]->url;
         $page_folder_id = $page[0]->folder_id;
         if ($page_folder_id) {
-            $folder_name = Model_Folders::res_folder_db('get_by_id', $page_folder_id)[0]['name'];
+            $folder_name = Model_Folders::get_data('id', $page_folder_id)[0]['name'];
         } else {
             $folder_name = null;
         }
@@ -230,7 +230,7 @@ class Controller_Pages extends Controller_Template
                 }
             } else {
                 $page = Model_Pages::forge()->set(['id' => $page_id,
-                    'folder_id' => Model_Folders::res_folder_db('get_by_name', Input::param('folder'))[0]['id'],
+                    'folder_id' => Model_Folders::get_data('name', Input::param('folder'))[0]['id'],
                     'title' => Input::param('title'),
                     'url' => Input::param('url'),
                     'updated_at' => date("Y/m/d H:i:s")])->is_new(false);

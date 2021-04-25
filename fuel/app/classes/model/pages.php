@@ -1,5 +1,6 @@
 <?php
 
+use Fuel\Core\DB;
 use Fuel\Core\Model_Crud;
 
 class Model_Pages extends Model_Crud
@@ -9,20 +10,20 @@ class Model_Pages extends Model_Crud
 
     public static function desc_updated_at($folder_id = null)
     {
-        if ($folder_id) {
-            $results = DB::select()->from('pages')
-            ->where('deleted_at', '=', null)
-            ->and_where('folder_id', '=', $folder_id)
-            ->order_by('updated_at', '=', 'desc')
-            ->execute();
-            return $results->as_array();
+        $query = DB::select()->from('pages')
+                 ->where('deleted_at', '=', null)
+                 ->and_where('folder_id', '=', $folder_id);
+            
+        $page_order_exist = DB::select()->from('pages')
+                            ->where('deleted_at', '=', null)
+                            ->and_where('folder_id', '=', $folder_id)
+                            ->and_where('page_order', '!=', null);
+    
+        if ($page_order_exist) {
+            $results = $query->order_by('page_order')->execute();
         } else {
-            $results = DB::select()->from('pages')
-            ->where('deleted_at', '=', null)
-            ->and_where('folder_id', '=', null)
-            ->order_by('updated_at', '=', 'desc')
-            ->execute();
-            return $results->as_array();
+            $results = $query->order_by('updated_at', '=', 'desc')->execute();
         }
+        return $results->as_array();
     }
 }
